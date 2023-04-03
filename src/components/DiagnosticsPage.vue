@@ -29,9 +29,9 @@
           <tbody>
           <tr style="border-bottom: 1px solid #FFEF00" v-for="service in services" :key="service.service_id">
             <td style="width: 40%" class="service-label">{{service.service.label}}</td>
-            <td style="width: 20%"><div class="diagnostic-th diagnostic-td"><div @click="setStatus(service.service, 'GOOD')"  class="diagnostic-checkbox" :class="{'diagnostic-checked': service.service.status === 'GOOD'}"></div></div></td>
-            <td style="width: 20%"><div class="diagnostic-th diagnostic-td"><div @click="setStatus(service.service, 'AVERAGE')" class="diagnostic-checkbox" :class="{'diagnostic-checked': service.service.status === 'AVERAGE'}"></div></div></td>
-            <td style="width: 20%"><div class="diagnostic-th diagnostic-td"><div @click="setStatus(service.service, 'BAD')" class="diagnostic-checkbox" :class="{'diagnostic-checked': service.service.status === 'BAD'}"></div></div></td>
+            <td style="width: 20%"><div class="diagnostic-th diagnostic-td"><div @click="setStatus(service, 'GOOD')"  class="diagnostic-checkbox" :class="{'diagnostic-checked': service.status === 'GOOD'}"></div></div></td>
+            <td style="width: 20%"><div class="diagnostic-th diagnostic-td"><div @click="setStatus(service, 'AVERAGE')" class="diagnostic-checkbox" :class="{'diagnostic-checked': service.status === 'AVERAGE'}"></div></div></td>
+            <td style="width: 20%"><div class="diagnostic-th diagnostic-td"><div @click="setStatus(service, 'BAD')" class="diagnostic-checkbox" :class="{'diagnostic-checked': service.status === 'BAD'}"></div></div></td>
           </tr>
           </tbody>
         </table>
@@ -42,84 +42,117 @@
         </div>
       </div>
     </div>
+    <!--To print-->
+    <print-consultation-page v-if="printThis" @close="printThis = false" :lastConsultation="consultation"></print-consultation-page>
+    <!--End print-->
   </div>
 </template>
 <script>
 
 import ServiceService from "../services/ServiceService";
+import PrintConsultationPage from "./PrintConsultationPage";
 import ConsultationService from "../services/ConsultationService";
 import Swal from 'sweetalert2'
 import ConsultationServiceService from "../services/ConsultationServiceService";
 export default {
   name: 'DiagnosticsPage',
+
+  components: {
+    PrintConsultationPage,
+  },
   data() {
     return {
         loading:true,
         sending:false,
-        consultation: null,
         services: [],
+        printThis:false,
         message: "",
+        consultation:null,
         selectedServices: [],
     }
   },
   methods: {
       saveConsultation() {
+        if(this.selectedServices.length === 0) {
+          Swal.fire({
+            position: 'top-end',
+            background: "rgb(252, 226,74)",
+            icon: "warning",
+            iconColor: "red",
+            color: "red",
+            text: 'You need to select at least 1 service',
+            timerProgressBar: true,
+            showConfirmButton: false,
+            timer: 1500
+          });
+          return;
+        }
         if(!this.consultation) {
-            if(this.selectedServices.length === 0) {
-                Swal.fire({
-                    position: 'top-end',
-                    background: "rgb(252, 226,74)",
-                    icon: "warning",
-                    iconColor: "red",
-                    color: "red",
-                    text: 'You need to select at least 1 service',
-                    timerProgressBar: true,
-                    showConfirmButton: false,
-                    timer: 1500
-                });
-                return;
-            }
             this.message = "Creating consultation...";
             this.sending = true;
             ConsultationService.create("diagnostic")
                 .then((res)=>{
                     this.consultation = res.data.consultation;
-                    this.message = "Adding selected services...";
-                    ConsultationServiceService.addServicesToConsultation(this.selectedServices, this.consultation.id)
-                        .then((res)=>{
-                            this.consultation = res.data.consultation;
-                            console.log(this.consultation);
-                            this.sending = false;
-                        })
-                        .catch((err)=>{
-                            console.log(err);
-                        })
+                    this.consultation.consultation_service = [];
+                    window.localStorage.setItem("consultation", JSON.stringify(this.consultation));
+                    this.addServices();
                 })
                 .catch((err)=>{this.sending = false; console.log(err)})
+        } else {
+          this.addServices();
         }
       },
+    addServices() {
+      this.message = "Adding selected services...";
+      this.sending = true;
+      ConsultationServiceService.addServicesToConsultation(this.selectedServices, this.consultation.id)
+              .then((res)=>{
+                this.consultation = res.data.consultation;
+                window.localStorage.setItem("consultation", JSON.stringify(this.consultation));
+                this.sending = false;
+                this.printThis = true;
+              })
+              .catch((err)=>{
+                console.log(err);
+              })
+    },
+
     setStatus(service,status) {
-
-      for(let i=0;i<this.selectedServices.length;i++){
-          if(this.selectedServices[i].id === service.id ){
-              this.selectedServices.splice(this.selectedServices[i],1);
-              break;
-          }
-      }
-
       if(service.status === status) {
+        if(this.selectedServices.indexOf(service) > -1) {
+          this.selectedServices.splice(this.selectedServices.indexOf(service),1);
+        }
         service.status = null;
+
       } else {
-        this.selectedServices.push({id:service.id,status});
+        if(this.selectedServices.indexOf(service) > -1)
+          this.selectedServices[this.selectedServices.indexOf(service)].status = status;
+        else
+        this.selectedServices.push(service);
         service.status = status;
       }
-      console.log(this.selectedServices);
     }
     },
   created() {
     ServiceService.findAllByStationId()
             .then((res)=>{
-              this.services = res.data.services
+              this.services = res.data.services;
+              if(window.localStorage.getItem("consultation")) {
+                this.consultation = JSON.parse(window.localStorage.getItem("consultation"));
+                if(this.consultation.consultation_service.length) {
+                  this.selectedServices = [];
+                  for(let i=0;i<this.consultation.consultation_service.length;i++) {
+                    this.selectedServices.push(this.consultation.consultation_service[i]);
+                    for(let j=0;j<this.services.length;j++) {
+                        if(this.services[j].service_id === this.consultation.consultation_service[i].service_id) {
+                          this.services[i].status = this.selectedServices[j].status;
+                          break;
+                      }
+                    }
+                  }
+                }
+              }
+
               this.loading=false
             })
             .catch((err)=>{

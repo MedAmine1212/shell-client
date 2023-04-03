@@ -22,7 +22,7 @@
     <div class="mainDiv">
       <div class="mainButtonsContainer">
         <div>
-          <button class="btn mainMenuButton"><img style="margin-right: 10px;margin-left: 5px" src="../assets/images/entretien.png" width="64" height="64"/> MAINTENANCE</button>
+          <router-link to="/main/maintenance"><button class="btn mainMenuButton"><img style="margin-right: 10px;margin-left: 5px" src="../assets/images/entretien.png" width="64" height="64"/> MAINTENANCE</button></router-link>
           <router-link to="/main/diagnostics"><button class="btn mainMenuButton"><img style="margin-right: 10px;margin-left: 5px" src="../assets/images/diagnostics.png" width="64" height="64"/>DIAGNOSTIC</button></router-link>
         </div>
         <div>

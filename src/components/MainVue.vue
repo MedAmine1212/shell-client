@@ -1,7 +1,9 @@
 <template>
-    <div style="overflow-y: hidden" @click="inputFocus()">
+    <div style="display: flex;flex-direction: column" @click="inputFocus()">
     <input @keyup.enter="goToLogin" v-model="barCode" type="text" id="barCode" style="position:absolute;z-index:-1;opacity: 0"/>
-    <router-view name="second"></router-view>
+        <div style="min-height: 1800px">
+    <router-view  name="second"></router-view>
+        </div>
     <div class="liberrexTag">
         POWERED BY LIBERREX
     </div>

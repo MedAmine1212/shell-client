@@ -24,8 +24,10 @@
         <h3 class="selected-category" v-if="selectedCategory">{{selectedCategory.label}}</h3>
         <h3 class="selected-category" v-else>All products</h3>
         </div>
-        <div class="products">
-          <div v-for="product in products" :key="product.id" class="product">
+        <div class="container products">
+        <div class="row">
+          <div v-for="product in products" :key="product.id" class="col-sm">
+            <div class="product">
             <div style="width: 231px;height: 243px">
             <img v-if="product.imageFile" width="231" height="243" :src="product.imageFile">
               <div v-else style="width: 60px;height: 60px" class="spinner-grow text-warning spinner" role="status"><span class="sr-only">Loading...</span></div>
@@ -34,6 +36,8 @@
             <div class="priceTage">{{product.products_station[0].price}}DT</div>
             <div v-if="product.products_station[0].stock == 0" class="bagde badge-danger">OUT OF STOCK</div>
           </div>
+          </div>
+        </div>
         </div>
       </div>
     </div>

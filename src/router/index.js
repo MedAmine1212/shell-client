@@ -10,6 +10,7 @@ import NewClient from "@/components/NewClient";
 import SummaryPage from "@/components/SummaryPage";
 import ProductsPage from "@/components/ProductsPage";
 import DiagnosticsPage from "@/components/DiagnosticsPage";
+import MaintenancePage from "@/components/MaintenancePage";
 
 const routes = [
     {
@@ -63,7 +64,7 @@ const routes = [
                 name: "maintenance",
                 components: {
                     default: MainVue,
-                    second: DiagnosticsPage
+                    second: MaintenancePage
                 }
                 // component: ()=>
                 //     import('view/view.vue') //lazy loading
