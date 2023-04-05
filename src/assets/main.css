@@ -234,6 +234,7 @@
 }
 .spinner-container{
     width: 100%;
+    margin-top: 200px;
     display: flex;
     justify-content: center;
 }
@@ -701,3 +702,77 @@ height: 148px;
 .diagnostic-checked{
     background-color: #FF141E;
 }
+
+.wheel-of-fortune{
+    justify-content: center;
+    display: flex;
+    overflow-y: hidden;
+    overflow-x: hidden;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    min-height: 1920px;
+    background: url("./images/wheel-bg.png") no-repeat center fixed;
+    background-size: cover;
+}
+
+.wheel-container{
+    filter: drop-shadow(0 0 1rem black);
+    position: absolute;
+    overflow: hidden;
+    width: 1350px !important;
+    max-width: 1350px !important;
+    min-width: 1350px !important;
+    height: 1400px !important;
+    max-height: 1400px !important;
+    min-height: 1400px !important;
+    margin-top: 20%;
+    display: flex;
+    justify-content: center;
+    z-index: 999;
+    background: url("./images/wheel.png") no-repeat center;
+    background-size: 130%;
+
+}
+.chances {
+    position: absolute;
+    width: 69%;
+    margin-top: 136px !important;
+    padding-bottom: 69%;
+    margin: auto;
+    border-radius: 50%;
+    overflow: hidden;
+    z-index: 999;
+    transition: transform 2s ease-out;
+}
+.chance {
+    overflow: hidden;
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 50%;
+    height: 50%;
+    -moz-border-image: -moz-linear-gradient(90deg, rgba(167,143,111,1) 0%, rgba(101,34,8,1) 35%, rgba(157,120,92,1) 133%);
+    -webkit-border-image: -webkit-linear-gradient(90deg, rgba(167,143,111,1) 0%, rgba(101,34,8,1) 35%, rgba(157,120,92,1) 133%);
+    border-image: linear-gradient(90deg, rgba(167,143,111,1) 0%, rgba(101,34,8,1) 35%, rgba(157,120,92,1) 133%);
+    -webkit-border-image-slice: 2;
+    border-image-slice: 2;
+    border-width: 3px;
+    border-style: solid;
+    transform-origin: 0% 100%;
+}
+
+.chance-label {
+    position: absolute;
+    left: -95%;
+    width: 200%;
+    height: 200%;
+    text-transform: uppercase;
+    font-size: 50px;
+    font-weight: bolder;
+    text-align: center;
+    padding-top: 20px;
+}
+

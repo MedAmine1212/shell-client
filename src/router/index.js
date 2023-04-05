@@ -11,6 +11,7 @@ import SummaryPage from "@/components/SummaryPage";
 import ProductsPage from "@/components/ProductsPage";
 import DiagnosticsPage from "@/components/DiagnosticsPage";
 import MaintenancePage from "@/components/MaintenancePage";
+import WheelOfFortune from "@/components/WheelOfFortune.vue";
 
 const routes = [
     {
@@ -55,6 +56,16 @@ const routes = [
                 components: {
                     default: MainVue,
                     second: DiagnosticsPage
+                }
+                // component: ()=>
+                //     import('view/view.vue') //lazy loading
+            },
+            {
+                path: 'wheel',
+                name: "wheel",
+                components: {
+                    default: MainVue,
+                    second: WheelOfFortune
                 }
                 // component: ()=>
                 //     import('view/view.vue') //lazy loading

@@ -165,7 +165,6 @@ export default {
       if(!this.userAdded) {
       ClientService.add(this.client)
               .then(async (res)=>{
-                console.log(res);
                 this.userAdded = true;
                 this.currentClient = res.data.client;
                this.addVehicle();
@@ -196,8 +195,8 @@ export default {
                 });
                 auth.actions.authenticate(this.currentClient.user.barCode)
                         .then(async (res)=>{
-                          await auth.actions.setToken(res.data.access_token);
-                          await auth.actions.setUserType(res.data.user_type);
+                          await auth.actions.setClientToken(res.data.access_token);
+                          await auth.actions.setClientBarCode(this.currentClient.user.barCode);
                           router.push({name: "home"});
                         })
               })
