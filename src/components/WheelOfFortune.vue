@@ -52,7 +52,7 @@
             return {
                 loading:true,
                 theWheel:null,
-                degree:0,
+                degree:1,
                 chances:[],
                 degreesToAdd:3600,
                 rotationInterval:null,
@@ -64,7 +64,6 @@
         methods: {
             rotateWheel() {
                 if (this.rotated) return;
-
                 document.getElementById("fastAudio").play();
                 setTimeout(()=>{
                     this.degree += this.degreesToAdd;
@@ -75,13 +74,12 @@
                     this.rotated = true;
                     WheelOfFortuneService.play()
                         .then((res)=>{
-                            console.log(res.data);
                             this.showResults(res.data.chance);
                         })
                         .catch((err)=>{
                             console.log(err);
                         })
-                },200);
+                },50);
 
 
             },
@@ -91,9 +89,9 @@
                 document.getElementById("fastAudio").pause();
                 for(let i = 0;i<this.chances.length;i++) {
                     if(chance.id === this.chances[i].wheel_trophy.id) {
-                        this.degree +=this.degreesToAdd+(360- (((360/this.chances.length)*i)+Math.floor(Math.random() * (360/this.chances.length))));
+                        this.degree =this.degreesToAdd+(360- (((360/this.chances.length)*i)+Math.floor(Math.random() * (360/this.chances.length))));
                         setTimeout(()=>{
-                            if(chance.label.toLowerCase() !== "lose")
+                            if(!chance.nonProfitable)
                             Swal.fire(
                                 'Congratulations !',
                                 'You won <b>'+chance.label+'</b>',
