@@ -9,6 +9,7 @@
     "dev": "npm run serve"
   },
   "dependencies": {
+    "@chenfengyuan/vue-qrcode": "^2.0.0",
     "@vue/reactivity": "latest",
     "axios": "^1.3.4",
     "bootstrap": "^5.2.3",
@@ -16,8 +17,9 @@
     "crypto-js": "latest",
     "dotenv": "^16.0.3",
     "mdb-vue-ui-kit": "^3.2.0",
+    "qrcode": "^1.5.1",
     "sweetalert2": "^11.7.3",
-    "vue": "^3.2.0",
+    "vue": "^3.2.47",
     "vue-cryptojs": "^2.3.1",
     "vue-router": "^4.1.6",
     "vue3-otp-input": "^0.3.6",

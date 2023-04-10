@@ -68,8 +68,13 @@
                 setTimeout(()=>{
                     this.degree += this.degreesToAdd;
                     this.rotationInterval = setInterval(()=>{
-                        this.degree += this.degreesToAdd;
-                        this.degreesToAdd/=2;
+                        if(this.degreesToAdd === 0) {
+                            clearInterval(this.rotationInterval);
+                            document.getElementById("fastAudio").pause();
+                            return;
+                        }
+                        requestAnimationFrame(()=>this.degree += this.degreesToAdd);
+                        this.degreesToAdd -= 360;
                     },1500);
                     this.rotated = true;
                     WheelOfFortuneService.play()
@@ -77,6 +82,13 @@
                             this.showResults(res.data.chance);
                         })
                         .catch((err)=>{
+                            clearInterval(this.rotationInterval);
+                            document.getElementById("fastAudio").pause();
+                            Swal.fire(
+                                'Oops !',
+                                'Error acquired !',
+                                'error'
+                            );
                             console.log(err);
                         })
                 },50);
@@ -89,7 +101,9 @@
                 document.getElementById("fastAudio").pause();
                 for(let i = 0;i<this.chances.length;i++) {
                     if(chance.id === this.chances[i].wheel_trophy.id) {
-                        this.degree =this.degreesToAdd+(360- (((360/this.chances.length)*i)+Math.floor(Math.random() * (360/this.chances.length))));
+                        requestAnimationFrame(()=>
+                        this.degree =this.degreesToAdd+(360- (((360/this.chances.length)*i)+Math.floor(Math.random() * (360/this.chances.length))))
+                    )
                         setTimeout(()=>{
                             if(!chance.nonProfitable)
                             Swal.fire(

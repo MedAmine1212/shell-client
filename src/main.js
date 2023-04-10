@@ -5,7 +5,6 @@ import {createVuetify} from 'vuetify'
 import 'vuetify/dist/vuetify.min.css'
 import App from './App.vue'
 import VueHtmlToPaper from './plugins/VueHtmlToPaper';
-
 const options = {
     name: '_blank',
     specs: [
